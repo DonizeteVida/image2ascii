@@ -1,79 +1,38 @@
 #include "definition.h"
+#include "read.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <jpeglib.h>
-#include <string.h>
 
-static unsigned char* transformRow(unsigned char *row, int size, int components,
-		int whiteSensibility) {
-	int column = 0;
-	int width = (size / components);
-	unsigned char *newRow = malloc((sizeof(unsigned char) * width) + 1);
-
-	do {
-
-		int color = 0;
-		for (int i = 0; i < components; i++) {
-			int pixel = row[column * components + i];
-			color += pixel;
-		}
-
-		unsigned char symbol;
-		int totalWhite = (whiteSensibility * 3);
-
-		if (color > .95 * totalWhite) {
-			symbol = ' ';
-		} else if (color > .85 * totalWhite) {
-			symbol = '-';
-		} else if (color > .75 * totalWhite) {
-			symbol = '*';
-		} else if (color > .65 * totalWhite) {
-			symbol = '|';
-		} else if (color > .55 * totalWhite) {
-			symbol = '/';
-		} else if (color > .45 * totalWhite) {
-			symbol = 'L';
-		} else if (color > .35 * totalWhite) {
-			symbol = 'C';
-		} else if (color > .25 * totalWhite) {
-			symbol = '&';
-		} else if (color > .15 * totalWhite) {
-			symbol = '8';
-		} else if (color > .5 * totalWhite) {
-			symbol = '@';
-		} else {
-			symbol = '#';
-		}
-
-		newRow[column++] = symbol;
-		//printf("%.3d ", color);
-	} while (column < width);
-	newRow[column] = '\0';
-	//puts("");
-	return newRow;
-}
-
-void printLetters(char *filename, struct Image *image, int whiteSensibility) {
-	FILE *outtext;
-
-	if ((outtext = fopen(filename, "w")) == NULL) {
-		fprintf(stderr, "can't open %s\n", filename);
-		exit(0);
-	}
-
-	for (int r = 0; r < image->height; r++) {
-		unsigned char *row = transformRow(image->image[r],
-				image->width * image->components, image->components,
-				whiteSensibility);
-		for (int c = 0; c < image->width; c++) {
-			fprintf(outtext, "%c_", row[c]);
-		}
-		fprintf(outtext, "\n");
-	}
-}
-
-struct Image* loadImage(char *filename) {
+struct Image* raw2Image(struct Raw *raw) {
 	struct Image *image = malloc(sizeof(struct Image));
+	image->height = raw->height;
+	image->width = raw->width;
+
+	image->pixels = malloc(sizeof(struct Pixel*) * image->height);
+
+	for (int r = 0; r < raw->height; r++) {
+		unsigned char *row = raw->data[r];
+		struct Pixel *nRow = malloc(sizeof(struct Pixel) * raw->width);
+
+		int index = 0;
+
+		do {
+			nRow[index].r = row[index * raw->components + 0];
+			nRow[index].g = row[index * raw->components + 1];
+			nRow[index].b = row[index * raw->components + 2];
+		} while (++index < raw->width);
+		free(row);
+		image->pixels[r] = nRow;
+	}
+	free(raw->data);
+	free(raw);
+
+	return image;
+}
+
+struct Raw* getRaw(char *filename) {
 
 	FILE *inputfile;
 
@@ -81,6 +40,8 @@ struct Image* loadImage(char *filename) {
 		fprintf(stderr, "can't open %s\n", filename);
 		exit(0);
 	}
+
+	struct Raw *raw = malloc(sizeof(struct Raw));
 
 	struct jpeg_decompress_struct cinfo;
 
@@ -99,7 +60,7 @@ struct Image* loadImage(char *filename) {
 	JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo,
 	JPOOL_IMAGE, row_stride, 1);
 
-	image->image = malloc(sizeof(unsigned char*) * cinfo.output_height);
+	raw->data = malloc(sizeof(unsigned char*) * cinfo.output_height);
 
 	while (cinfo.output_scanline < cinfo.output_height) {
 		(void) jpeg_read_scanlines(&cinfo, buffer, 1);
@@ -110,16 +71,16 @@ struct Image* loadImage(char *filename) {
 			line[i] = buff[i];
 		}
 
-		image->image[cinfo.output_scanline - 1] = line;
+		raw->data[cinfo.output_scanline - 1] = line;
 	}
 
-	image->height = cinfo.output_height;
-	image->width = cinfo.output_width;
-	image->components = cinfo.output_components;
+	raw->height = cinfo.output_height;
+	raw->width = cinfo.output_width;
+	raw->components = cinfo.output_components;
 
 	(void) jpeg_finish_decompress(&cinfo);
 	jpeg_destroy_decompress(&cinfo);
 	fclose(inputfile);
 
-	return image;
+	return raw;
 }

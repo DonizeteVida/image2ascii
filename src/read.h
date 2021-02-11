@@ -8,7 +8,7 @@
 #ifndef READ_H_
 #define READ_H_
 
-struct Image* loadImage(char* name);
-void printLetters(char *filename, struct Image *image, int whiteSensibility);
+struct Raw* getRaw(char *filename);
+struct Image* raw2Image(struct Raw *raw);
 
 #endif /* READ_H_ */
