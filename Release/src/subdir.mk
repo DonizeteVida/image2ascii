@@ -4,15 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/image2letter.c \
+../src/image2ascii.c \
 ../src/read.c 
 
 OBJS += \
-./src/image2letter.o \
+./src/image2ascii.o \
 ./src/read.o 
 
 C_DEPS += \
-./src/image2letter.d \
+./src/image2ascii.d \
 ./src/read.d 
 
 
