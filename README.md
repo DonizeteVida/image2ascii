@@ -14,4 +14,6 @@ To link jpeg library on compile target: -ljpeg
 
 ![From image](https://github.com/DonizeteVida/image2ascii/blob/main/image.jpg)
 
+![To image](https://github.com/DonizeteVida/image2ascii/blob/main/image-result.png)
+
 [RAW RESULT - (~~Requires big monitor~~)](https://raw.githubusercontent.com/DonizeteVida/image2ascii/main/result.txt)
