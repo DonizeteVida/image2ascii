@@ -14,7 +14,15 @@
 #include "definition.h"
 #include "read.h"
 
-int main(void) {
-	struct Image *image = loadImage("./image.jpg");
-	printLetters("./result.txt", image, 255);
+int main(int argc, char *args[]) {
+	if (argc > 2) {
+		struct Image *image = loadImage(args[1]);
+		printLetters(args[2], image, 255);
+	} else {
+		fprintf(stderr, "Missing argument...\n");
+		fprintf(stderr, "./image2letter image.jpg result.txt\n");
+		exit(0);
+	}
+
+	return 0;
 }

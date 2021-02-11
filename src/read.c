@@ -4,7 +4,7 @@
 #include <jpeglib.h>
 #include <string.h>
 
-unsigned char* transformRow(unsigned char *row, int size, int components,
+static unsigned char* transformRow(unsigned char *row, int size, int components,
 		int whiteSensibility) {
 	int column = 0;
 	int width = (size / components);
@@ -46,10 +46,10 @@ unsigned char* transformRow(unsigned char *row, int size, int components,
 		}
 
 		newRow[column++] = symbol;
-		printf("%.3d ", color);
+		//printf("%.3d ", color);
 	} while (column < width);
 	newRow[column] = '\0';
-	puts("");
+	//puts("");
 	return newRow;
 }
 
