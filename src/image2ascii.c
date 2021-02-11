@@ -18,8 +18,9 @@
 int main(int argc, char *args[]) {
 	if (argc > 3) {
 		struct Image *image = raw2Image(getRaw(args[1]));
-		toAscii(args[2], image, 255);
-		toHtml(args[3], image);
+		struct Image *resize = resizeImage(image, image->width / 2, image->height / 2);
+		toAscii(args[2], resize, 255);
+		toHtml(args[3], resize);
 	} else {
 		fprintf(stderr, "Missing argument...\n");
 		fprintf(stderr, "./image2letter image.jpg result.txt result.html\n");

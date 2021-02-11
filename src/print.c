@@ -17,7 +17,7 @@ void toHtml(char *filename, struct Image *image) {
 		exit(0);
 	}
 
-	fprintf(outtext, "<style> span { font-size: 1px; width: 1px; height: 1px; align: center; display: inline-block; } </style>");
+	fprintf(outtext, "<style> span { font-size: 5px; width: 5px; height: 5px; align: center; display: inline-block; } </style>");
 
 	for (int r = 0; r < image->height; r++) {
 

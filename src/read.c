@@ -5,6 +5,31 @@
 #include <stdlib.h>
 #include <jpeglib.h>
 
+struct Image* resizeImage(struct Image *from, int width, int height) {
+	struct Image *to = malloc(sizeof(struct Image));
+	to->width = width;
+	to->height = height;
+	to->pixels = malloc(sizeof(struct Pixel*) * height);
+
+	for (int r = 0; r < height; r++) {
+		float vFactor = (r + 1) / (float) height;
+		to->pixels[r] = malloc(sizeof(struct Pixel) * width);
+
+		for (int c = 0; c < width; c++) {
+			float hFactor = (c + 1) / (float) width;
+			int fromV = vFactor * (from->height - 1);
+			int fromH = hFactor * (from->width - 1);
+			struct Pixel p = from->pixels[fromV][fromH];
+
+			to->pixels[r][c].r = p.r;
+			to->pixels[r][c].g = p.g;
+			to->pixels[r][c].b = p.b;
+		}
+	}
+
+	return to;
+}
+
 struct Image* raw2Image(struct Raw *raw) {
 	struct Image *image = malloc(sizeof(struct Image));
 	image->height = raw->height;
