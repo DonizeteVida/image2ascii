@@ -16,5 +16,5 @@
 
 int main(void) {
 	struct Image *image = loadImage("./image.jpg");
-	printLetters("./result.txt", image, 60);
+	printLetters("./result.txt", image, 255);
 }

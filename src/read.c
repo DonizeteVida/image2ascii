@@ -8,16 +8,44 @@ unsigned char* transformRow(unsigned char *row, int size, int components,
 		int whiteSensibility) {
 	int column = 0;
 	int width = (size / components);
-	unsigned char *newRow = malloc(
-			(sizeof(unsigned char) * width) + 1);
+	unsigned char *newRow = malloc((sizeof(unsigned char) * width) + 1);
 
 	do {
+
 		int color = 0;
 		for (int i = 0; i < components; i++) {
 			int pixel = row[column * components + i];
 			color += pixel;
 		}
-		newRow[column++] = (color > whiteSensibility * 3) ? '_' : '@';
+
+		unsigned char symbol;
+		int totalWhite = (whiteSensibility * 3);
+
+		if (color > .95 * totalWhite) {
+			symbol = ' ';
+		} else if (color > .85 * totalWhite) {
+			symbol = '-';
+		} else if (color > .75 * totalWhite) {
+			symbol = '*';
+		} else if (color > .65 * totalWhite) {
+			symbol = '|';
+		} else if (color > .55 * totalWhite) {
+			symbol = '/';
+		} else if (color > .45 * totalWhite) {
+			symbol = 'L';
+		} else if (color > .35 * totalWhite) {
+			symbol = 'C';
+		} else if (color > .25 * totalWhite) {
+			symbol = '&';
+		} else if (color > .15 * totalWhite) {
+			symbol = '8';
+		} else if (color > .5 * totalWhite) {
+			symbol = '@';
+		} else {
+			symbol = '#';
+		}
+
+		newRow[column++] = symbol;
 		printf("%.3d ", color);
 	} while (column < width);
 	newRow[column] = '\0';
@@ -37,7 +65,7 @@ void printLetters(char *filename, struct Image *image, int whiteSensibility) {
 		unsigned char *row = transformRow(image->image[r],
 				image->width * image->components, image->components,
 				whiteSensibility);
-		for(int c = 0; c < image->width; c++) {
+		for (int c = 0; c < image->width; c++) {
 			fprintf(outtext, "%c_", row[c]);
 		}
 		fprintf(outtext, "\n");
@@ -78,7 +106,7 @@ struct Image* loadImage(char *filename) {
 		unsigned char *line = malloc(sizeof(unsigned char) * row_stride);
 		unsigned char *buff = buffer[0];
 
-		for(int i = 0; i < row_stride; i++){
+		for (int i = 0; i < row_stride; i++) {
 			line[i] = buff[i];
 		}
 
