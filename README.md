@@ -2,10 +2,10 @@
 
 jpeg library is versioned, but you need to include header files and link libjpeg.a on your build environment
 
-## Features:
+## FEATURES:
 - HTML parse
 - ASCII parse
-- Runtime redimension. ~~but without preview~~
+- Runtime redimension ~~but without preview~~
 
 ## TODO:
 - TERMINAL ASCII parse
@@ -19,5 +19,6 @@ jpeg library is versioned, but you need to include header files and link libjpeg
 
 ### WALP
 ![WALP](https://github.com/DonizeteVida/image2ascii/blob/main/walp.jpg)
-![WALP HTML](https://github.com/DonizeteVida/image2ascii/blob/main/walp.html.png)
+![WALP0 HTML](https://github.com/DonizeteVida/image2ascii/blob/main/walp0.html.png)
+![WALP1 HTML](https://github.com/DonizeteVida/image2ascii/blob/main/walp1.html.png)
 ![WALP2 HTML](https://github.com/DonizeteVida/image2ascii/blob/main/walp2.html.png)
