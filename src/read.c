@@ -1,9 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "jpeglib.h"
+
 #include "definition.h"
 #include "read.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <jpeglib.h>
+struct Image* scaleImage(struct Image *image, float scale) {
+	return resizeImage(image, image->width * scale, image->height * scale);
+}
 
 struct Image* resizeImage(struct Image *from, int width, int height) {
 	struct Image *to = malloc(sizeof(struct Image));
@@ -12,18 +16,25 @@ struct Image* resizeImage(struct Image *from, int width, int height) {
 	to->pixels = malloc(sizeof(struct Pixel*) * height);
 
 	for (int r = 0; r < height; r++) {
-		float vFactor = (r + 1) / (float) height;
+		float verticalPercentage = (r + 1) / (float) height;
+
 		to->pixels[r] = malloc(sizeof(struct Pixel) * width);
 
 		for (int c = 0; c < width; c++) {
-			float hFactor = (c + 1) / (float) width;
-			int fromV = vFactor * (from->height - 1);
-			int fromH = hFactor * (from->width - 1);
-			struct Pixel p = from->pixels[fromV][fromH];
+			float horizontalPercentage = (c + 1) / (float) width;
 
-			to->pixels[r][c].r = p.r;
-			to->pixels[r][c].g = p.g;
-			to->pixels[r][c].b = p.b;
+			int fromVerticalCoordinate = verticalPercentage
+					* (from->height - 1);
+			int fromHorizontalCoordinate = horizontalPercentage
+					* (from->width - 1);
+
+			struct Pixel fromPixel =
+					from->pixels[fromVerticalCoordinate][fromHorizontalCoordinate];
+			struct Pixel *toPixel = &to->pixels[r][c];
+
+			toPixel->r = fromPixel.r;
+			toPixel->g = fromPixel.g;
+			toPixel->b = fromPixel.b;
 		}
 	}
 
@@ -39,17 +50,20 @@ struct Image* raw2Image(struct Raw *raw) {
 
 	for (int r = 0; r < raw->height; r++) {
 		unsigned char *row = raw->data[r];
-		struct Pixel *nRow = malloc(sizeof(struct Pixel) * raw->width);
+
+		struct Pixel *horizontalPixels = malloc(
+				sizeof(struct Pixel) * raw->width);
 
 		int index = 0;
 
 		do {
-			nRow[index].r = row[index * raw->components + 0];
-			nRow[index].g = row[index * raw->components + 1];
-			nRow[index].b = row[index * raw->components + 2];
+			struct Pixel *pixel = &horizontalPixels[index];
+			pixel->r = row[index * raw->components + 0];
+			pixel->g = row[index * raw->components + 1];
+			pixel->b = row[index * raw->components + 2];
 		} while (++index < raw->width);
 		free(row);
-		image->pixels[r] = nRow;
+		image->pixels[r] = horizontalPixels;
 	}
 	free(raw->data);
 	free(raw);
@@ -82,8 +96,8 @@ struct Raw* getRaw(char *filename) {
 
 	int row_stride = cinfo.output_width * cinfo.output_components;
 
-	JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) &cinfo,
-	JPOOL_IMAGE, row_stride, 1);
+	JSAMPARRAY buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr) & cinfo,
+			JPOOL_IMAGE, row_stride, 1);
 
 	raw->data = malloc(sizeof(unsigned char*) * cinfo.output_height);
 

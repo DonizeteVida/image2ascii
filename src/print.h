@@ -9,6 +9,8 @@
 #define PRINT_H_a
 
 void toAscii(char *filename, struct Image *image, int whiteFactor);
-void toHtml(char *filename, struct Image *image);
+void toHtml(char *filename, struct Image *image, char letter, int pixelSize, char* color);
+void toTerminal(struct Image *image);
+void toColoredTerminal(struct Image *image);
 
 #endif /* PRINT_H_ */

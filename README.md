@@ -1,19 +1,22 @@
 # Attention
 
-> You will need **jpeg library** if you plan to compile it. <br/>
+jpeg library is versioned, but you need to include header files and link libjpeg.a on your build environment
 
-´´´
-	sudo apt-get install **jpeglib-dev**
-´´´
+## Features:
+- HTML parse
+- ASCII parse
+- Runtime redimension. ~~but without preview~~
 
-## How to
+## TODO:
+- TERMINAL ASCII parse
+- TERMINAL COLORED parse
 
-To link jpeg library on compile target: -ljpeg
 
-### Result ->
+### AFRO
+![AFRO](https://github.com/DonizeteVida/image2ascii/blob/main/afro.jpg)
+![AFRO HTML](https://github.com/DonizeteVida/image2ascii/blob/main/afro.html.png)
+[AFRO ASCII](https://raw.githubusercontent.com/DonizeteVida/image2ascii/main/afro.txt)
 
-![From image](https://github.com/DonizeteVida/image2ascii/blob/main/image.jpg)
-
-![HTML RESULT](https://github.com/DonizeteVida/image2ascii/blob/main/result.html)
-
-[RAW RESULT](https://raw.githubusercontent.com/DonizeteVida/image2ascii/main/result.txt)
+### WALP
+![WALP](https://github.com/DonizeteVida/image2ascii/blob/main/walp.jpg)
+![WALP HTML](https://github.com/DonizeteVida/image2ascii/blob/main/walp.html.png)
