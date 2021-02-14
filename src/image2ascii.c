@@ -12,9 +12,10 @@
 #include <stdlib.h>
 #include <stdlib.h>
 
-#include "definition.h"
+#include "data/definition.h"
 #include "read.h"
 #include "print.h"
+#include "transform.h"
 
 static void clearImage(struct Image *image) {
 	for (int r = 0; r < image->height; r++) {
@@ -58,6 +59,9 @@ int main(int argc, char *args[]) {
 	scanf("%s", buffer);
 
 	struct Image* userImage = raw2Image(getRaw(buffer));
+	toTerminal(userImage);
+
+	return 0;
 
 	puts("");
 	puts("Se chegamos até aqui, conseguimos criar um modelo a qual vamos manusear posteriormente.");

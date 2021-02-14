@@ -5,8 +5,8 @@
  *      Author: doni
  */
 
-#ifndef PRINT_H_a
-#define PRINT_H_a
+#ifndef PRINT_H_
+#define PRINT_H_
 
 void toAscii(char *filename, struct Image *image, int whiteFactor);
 void toHtml(char *filename, struct Image *image, char letter, int pixelSize, char* color);

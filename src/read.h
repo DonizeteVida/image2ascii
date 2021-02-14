@@ -11,7 +11,4 @@
 struct Raw* getRaw(char *filename);
 struct Image* raw2Image(struct Raw *raw);
 
-struct Image* scaleImage(struct Image *image, float scale);
-struct Image* resizeImage(struct Image *image, int width, int height);
-
 #endif /* READ_H_ */

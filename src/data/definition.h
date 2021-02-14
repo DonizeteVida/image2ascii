@@ -9,7 +9,7 @@
 #define DEFINITION_H_
 
 //width will be horizontal size of image * components;
-//180 * 180 image becomes (180 * 3) * 180, as an example
+//data length will be width * components
 struct Raw {
 	int width;
 	int height;

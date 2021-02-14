@@ -1,45 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "jpeglib.h"
 
-#include "definition.h"
+#include "data/definition.h"
 #include "read.h"
 
-struct Image* scaleImage(struct Image *image, float scale) {
-	return resizeImage(image, image->width * scale, image->height * scale);
-}
-
-struct Image* resizeImage(struct Image *from, int width, int height) {
-	struct Image *to = malloc(sizeof(struct Image));
-	to->width = width;
-	to->height = height;
-	to->pixels = malloc(sizeof(struct Pixel*) * height);
-
-	for (int r = 0; r < height; r++) {
-		float verticalPercentage = (r + 1) / (float) height;
-
-		to->pixels[r] = malloc(sizeof(struct Pixel) * width);
-
-		for (int c = 0; c < width; c++) {
-			float horizontalPercentage = (c + 1) / (float) width;
-
-			int fromVerticalCoordinate = verticalPercentage
-					* (from->height - 1);
-			int fromHorizontalCoordinate = horizontalPercentage
-					* (from->width - 1);
-
-			struct Pixel fromPixel =
-					from->pixels[fromVerticalCoordinate][fromHorizontalCoordinate];
-			struct Pixel *toPixel = &to->pixels[r][c];
-
-			toPixel->r = fromPixel.r;
-			toPixel->g = fromPixel.g;
-			toPixel->b = fromPixel.b;
-		}
-	}
-
-	return to;
-}
+#include "jpeglib.h"
 
 struct Image* raw2Image(struct Raw *raw) {
 	struct Image *image = malloc(sizeof(struct Image));
@@ -58,9 +23,10 @@ struct Image* raw2Image(struct Raw *raw) {
 
 		do {
 			struct Pixel *pixel = &horizontalPixels[index];
-			pixel->r = row[index * raw->components + 0];
-			pixel->g = row[index * raw->components + 1];
-			pixel->b = row[index * raw->components + 2];
+			int resolvedIndex = index * raw->components;
+			pixel->r = row[resolvedIndex + 0];
+			pixel->g = row[resolvedIndex + 1];
+			pixel->b = row[resolvedIndex + 2];
 		} while (++index < raw->width);
 		free(row);
 		image->pixels[r] = horizontalPixels;

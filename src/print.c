@@ -8,10 +8,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "definition.h"
+#include "data/definition.h"
+#include "platform/terminal.h"
+#include "transform.h"
 
 void toTerminal(struct Image *image) {
+	struct TerminalInfo terminalInfo;
+	getTerminalInfo(&terminalInfo);
 
+	// we print 2 char per print, this why we divide per 2
+	float factor = terminalInfo.width / (float) image->width / 2;
+	struct Image *newImage = scaleImage(image, factor);
+
+	for (int r = 0; r < newImage->height; r++) {
+
+		struct Pixel *row = newImage->pixels[r];
+
+		for (int c = 0; c < newImage->width; c++) {
+
+			struct Pixel *pixel = &row[c];
+
+			int color = pixel->r + pixel->g + pixel->b;
+
+			unsigned char symbol;
+			int totalWhite = (255 * 3);
+
+			if (color > .95 * totalWhite) {
+				symbol = ' ';
+			} else if (color > .85 * totalWhite) {
+				symbol = '-';
+			} else if (color > .75 * totalWhite) {
+				symbol = '*';
+			} else if (color > .65 * totalWhite) {
+				symbol = '|';
+			} else if (color > .55 * totalWhite) {
+				symbol = '/';
+			} else if (color > .45 * totalWhite) {
+				symbol = 'L';
+			} else if (color > .35 * totalWhite) {
+				symbol = 'C';
+			} else if (color > .25 * totalWhite) {
+				symbol = '&';
+			} else if (color > .15 * totalWhite) {
+				symbol = '8';
+			} else if (color > .5 * totalWhite) {
+				symbol = '@';
+			} else {
+				symbol = '#';
+			}
+			printf("%c_", symbol);
+		}
+		puts("");
+	}
 }
 
 void toColoredTerminal(struct Image *image) {
@@ -37,11 +85,14 @@ void toHtml(char *filename, struct Image *image, char letter, int pixelSize, cha
 
 		for (int c = 0; c < image->width; c++) {
 
-			struct Pixel pixel = row[c];
-
-			fprintf(outtext, "<span style=\"color: rgb(%d, %d, %d)\">%c</span>",
-					pixel.r, pixel.g, pixel.b, letter);
-			printf("%d, %d, %d - ", pixel.r, pixel.g, pixel.b);
+			struct Pixel* pixel = &row[c];
+			{
+				fprintf(
+					outtext,
+					"<span style=\"color: rgb(%d, %d, %d)\">%c</span>",
+					pixel->r, pixel->g, pixel->b, letter
+				);
+			}
 		}
 		fprintf(outtext, "<br/>");
 		puts("");
@@ -63,9 +114,9 @@ void toAscii(char *filename, struct Image *image, int whiteFactor) {
 
 		for (int c = 0; c < image->width; c++) {
 
-			struct Pixel column = row[c];
+			struct Pixel* pixel = &row[c];
 
-			int color = column.r + column.g + column.b;
+			int color = pixel->r + pixel->g + pixel->b;
 
 			unsigned char symbol;
 			int totalWhite = (whiteFactor * 3);
