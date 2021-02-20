@@ -4,7 +4,8 @@
  *  Created on: Feb 13, 2021
  *      Author: doni
  */
-#include <sys/ioctl.h>
+
+#include "../terminal.h"
 
 void getTerminalInfo(struct TerminalInfo* terminalInfo) {
 
