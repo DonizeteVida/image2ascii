@@ -18,8 +18,8 @@ Image* resizeImage(Image* from, int width, int height) {
 
 	for (int r = 0; r < height; r++) {
 		for (int c = 0; c < width; c++) {
-			float rp = (r + 1) / (float) height;
-			float cp = (c + 1) / (float) width;
+			float rp = r / (float) height;
+			float cp = c / (float) width;
 
 			int row = rp * from->height;
 			int column = cp * from->width;
