@@ -1,10 +1,3 @@
-/*
- * read.h
- *
- *  Created on: Feb 10, 2021
- *      Author: doni
- */
-
 #ifndef READ_H_
 #define READ_H_
 
