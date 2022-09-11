@@ -3,9 +3,9 @@
 
 //data size is width * height * components (aka pixels, or whatever)
 typedef struct {
-	int width;
-	int height;
-	int components;
+	unsigned int width;
+	unsigned int height;
+	unsigned int components;
 	unsigned char* data;
 } Raw;
 
@@ -17,8 +17,8 @@ typedef struct {
 
 //pixels size are width * height
 typedef struct {
-	int width;
-	int height;
+	unsigned int width;
+	unsigned int height;
 	Pixel* pixels;
 } Image;
 

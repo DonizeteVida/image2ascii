@@ -8,9 +8,11 @@
 #include "src/transform.h"
 
 int main(int argc, char *args[]) {
-    char* filename = "./example/book.jpeg";
-    Image* image = raw2Image(getRaw(filename));
-    toHtml("./teste.html", image, '@', 1, "black");
-    image = scaleImage(image, .3);
-    toHtml("./teste2.html", image, '@', 1, "black");
+    char* filename = "./example/colored.jpg";
+    Image* image = scaleImage(raw2Image(getRaw(filename)), 1);
+    toHtml("./colored.html", image, '@', 2, "black");
+    toGrayHtml("./colored_gray.html", image, '@', 2, "black");
+    toAscii("./colored.txt", image);
+    free(image->pixels);
+    free(image);
 }

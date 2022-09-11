@@ -28,7 +28,7 @@ Raw* getRaw(char *filename) {
 	(void) jpeg_read_header(&cinfo, TRUE);
 	(void) jpeg_start_decompress(&cinfo);
 
-	int spread_row = cinfo.output_width * cinfo.output_components;
+	const int spread_row = cinfo.output_width * cinfo.output_components;
 
 	JSAMPARRAY buffer = cinfo.mem->alloc_sarray(
 		(j_common_ptr) &cinfo, 
@@ -41,9 +41,10 @@ Raw* getRaw(char *filename) {
 
 	while (cinfo.output_scanline < cinfo.output_height) {
 		(void) jpeg_read_scanlines(&cinfo, buffer, /*max_lines*/ 1);
-		
+
+		const int index = cinfo.output_scanline * spread_row;
+
 		for (int i = 0; i < spread_row; i++) {
-			int index = cinfo.output_scanline * spread_row;
 			raw->data[index + i] = buffer[0][i];
 		}
 	}
@@ -65,13 +66,16 @@ Image* raw2Image(Raw *raw) {
 	image->height = raw->height;
 	image->width = raw->width;
 
-	int size = raw->width * raw->height;
+	const int size = raw->width * raw->height;
+	const int components = raw->components;
 
 	image->pixels = malloc(sizeof(Pixel) * size);
 
 	for (int i = 0; i < size; i++) {
-		int index = i * raw->components;
 		Pixel* pixel = image->pixels + i;
+
+		int index = i * components;
+
 		pixel->r = raw->data[index];
 		pixel->g = raw->data[index + 1];
 		pixel->b = raw->data[index + 2];
