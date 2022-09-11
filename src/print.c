@@ -19,8 +19,8 @@ void toHtml(char *filename, Image *image, char letter, int pixelSize, char* back
 	fprintf(file, "<div style=\"align: center; overflow-x: scroll; width: 100%%; height: 100%%; \">");
 
 	for (int r = 0; r < image->height; r++) {
-		for (int w = 0; w < image->width; w++) {
-			Pixel* pixel = image->pixels + r * image->width + w;
+		for (int c = 0; c < image->width; c++) {
+			Pixel* pixel = image->pixels + r * image->width + c;
 			fprintf(
 				file,
 				"<span style=\"color: rgb(%d, %d, %d)\">%c</span>",
@@ -42,8 +42,8 @@ void toAscii(char* filename, Image* image, int whiteFactor) {
 	}
 
 	for (int r = 0; r < image->height; r++) {
-		for (int w = 0; w < image->width; w++) {
-			Pixel* pixel = image->pixels + r * image->width + w;
+		for (int c = 0; c < image->width; c++) {
+			Pixel* pixel = image->pixels + r * image->width + c;
 			int color = pixel->r + pixel->g + pixel->b;
 
 			unsigned char symbol;

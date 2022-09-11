@@ -1,7 +1,7 @@
 #ifndef DATA_H_
 #define DATA_H_
 
-//data size is width * height
+//data size is width * height * components (aka pixels, or whatever)
 typedef struct {
 	int width;
 	int height;
