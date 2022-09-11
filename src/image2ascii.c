@@ -17,7 +17,7 @@
 #include "print.h"
 #include "transform.h"
 
-static void clearImage(struct Image *image) {
+static void clearImage(Image *image) {
 	for (int r = 0; r < image->height; r++) {
 		free(image->pixels[r]);
 	}
@@ -32,7 +32,7 @@ static int question(char* q) {
 	return res;
 }
 
-static struct Image* redim(struct Image* image) {
+static Image* redim(Image* image) {
 	if(question("Deseja redimensionar a imagem?")){
 		puts("Uhull !!");
 		float fator;
@@ -42,7 +42,7 @@ static struct Image* redim(struct Image* image) {
 		if(fator <= 0) {
 			fator = .5;
 		}
-		struct Image* new = scaleImage(image, fator);
+		Image* new = scaleImage(image, fator);
 		clearImage(image);
 		return new;
 	}
@@ -58,7 +58,7 @@ int main(int argc, char *args[]) {
 	puts("Primeiro, digite o nome do arquivo a ser convertido a partir do diretório atual: ");
 	scanf("%s", buffer);
 
-	struct Image* userImage = raw2Image(getRaw(buffer));
+	Image* userImage = raw2Image(getRaw(buffer));
 	toTerminal(userImage);
 
 	return 0;

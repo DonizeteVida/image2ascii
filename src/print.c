@@ -12,21 +12,21 @@
 #include "platform/terminal.h"
 #include "transform.h"
 
-void toTerminal(struct Image *image) {
+void toTerminal(Image *image) {
 	struct TerminalInfo terminalInfo;
 	getTerminalInfo(&terminalInfo);
 
 	// we print 2 char per print, this why we divide per 2
 	float factor = terminalInfo.width / (float) image->width / 2;
-	struct Image *newImage = scaleImage(image, factor);
+	Image *newImage = scaleImage(image, factor);
 
 	for (int r = 0; r < newImage->height; r++) {
 
-		struct Pixel *row = newImage->pixels[r];
+		Pixel *row = newImage->pixels[r];
 
 		for (int c = 0; c < newImage->width; c++) {
 
-			struct Pixel *pixel = &row[c];
+			Pixel *pixel = &row[c];
 
 			int color = pixel->r + pixel->g + pixel->b;
 
@@ -62,11 +62,11 @@ void toTerminal(struct Image *image) {
 	}
 }
 
-void toColoredTerminal(struct Image *image) {
+void toColoredTerminal(Image *image) {
 
 }
 
-void toHtml(char *filename, struct Image *image, char letter, int pixelSize, char* color) {
+void toHtml(char *filename, Image *image, char letter, int pixelSize, char* color) {
 	FILE *outtext;
 
 	if ((outtext = fopen(filename, "w")) == NULL) {
@@ -81,11 +81,11 @@ void toHtml(char *filename, struct Image *image, char letter, int pixelSize, cha
 	fprintf(outtext, "<div style=\"align: center; overflow-x: scroll; width: 100%%; height: 100%%; \">");
 	for (int r = 0; r < image->height; r++) {
 
-		struct Pixel *row = image->pixels[r];
+		Pixel *row = image->pixels[r];
 
 		for (int c = 0; c < image->width; c++) {
 
-			struct Pixel* pixel = &row[c];
+			Pixel* pixel = &row[c];
 			{
 				fprintf(
 					outtext,
@@ -100,21 +100,21 @@ void toHtml(char *filename, struct Image *image, char letter, int pixelSize, cha
 	fprintf(outtext, "</div>");
 }
 
-void toAscii(char *filename, struct Image *image, int whiteFactor) {
-	FILE *outtext;
+void toAscii(char* filename, Image* image, int whiteFactor) {
+	FILE* file;
 
-	if ((outtext = fopen(filename, "w")) == NULL) {
+	if ((file = fopen(filename, "w")) == NULL) {
 		fprintf(stderr, "can't open %s\n", filename);
 		exit(0);
 	}
 
 	for (int r = 0; r < image->height; r++) {
 
-		struct Pixel *row = image->pixels[r];
+		Pixel *row = image->pixels[r];
 
 		for (int c = 0; c < image->width; c++) {
 
-			struct Pixel* pixel = &row[c];
+			Pixel* pixel = row + c;
 
 			int color = pixel->r + pixel->g + pixel->b;
 
@@ -144,8 +144,10 @@ void toAscii(char *filename, struct Image *image, int whiteFactor) {
 			} else {
 				symbol = '#';
 			}
-			fprintf(outtext, "%c_", symbol);
+			fprintf(file, "%c_", symbol);
 		}
-		fprintf(outtext, "\n");
+		fprintf(file, "\n");
 	}
+
+	fclose(file);
 }

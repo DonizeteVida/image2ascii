@@ -8,26 +8,26 @@
 #ifndef DEFINITION_H_
 #define DEFINITION_H_
 
-//width will be horizontal size of image * components;
-//data length will be width * components
-struct Raw {
+typedef unsigned char byte;
+
+//data size is width * height
+typedef struct {
 	int width;
 	int height;
 	int components;
-	unsigned char **data;
-};
+	byte** data;
+} Raw;
 
-//Image is a better representation for manipulation approaches
-struct Image {
+typedef struct {
+	byte r;
+	byte g;
+	byte b;
+} Pixel;
+
+typedef struct {
 	int width;
 	int height;
-	struct Pixel **pixels;
-};
-
-struct Pixel {
-	int r;
-	int g;
-	int b;
-};
+	Pixel** pixels;
+} Image;
 
 #endif /* DEFINITION_H_ */

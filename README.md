@@ -1,6 +1,7 @@
 # Attention
 
-jpeg library is versioned, but you need to include header files and link libjpeg.a on your build environment
+~~jpeg library is versioned, but you need to include header files and link libjpeg.a on your build environment~~
+
 
 ## FEATURES:
 - HTML parse
