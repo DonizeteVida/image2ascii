@@ -42,7 +42,7 @@ Raw* getRaw(char *filename) {
 	while (cinfo.output_scanline < cinfo.output_height) {
 		(void) jpeg_read_scanlines(&cinfo, buffer, /*max_lines*/ 1);
 
-		const int index = cinfo.output_scanline * spread_row;
+		const unsigned int index = cinfo.output_scanline * spread_row;
 
 		for (int i = 0; i < spread_row; i++) {
 			raw->data[index + i] = buffer[0][i];
@@ -66,15 +66,15 @@ Image* raw2Image(Raw *raw) {
 	image->height = raw->height;
 	image->width = raw->width;
 
-	const int size = raw->width * raw->height;
+	const unsigned int size = raw->width * raw->height;
 	const int components = raw->components;
 
 	image->pixels = malloc(sizeof(Pixel) * size);
 
-	for (int i = 0; i < size; i++) {
+	for (unsigned int i = 0; i < size; i++) {
 		Pixel* pixel = image->pixels + i;
 
-		int index = i * components;
+		unsigned int index = i * components;
 
 		pixel->r = raw->data[index];
 		pixel->g = raw->data[index + 1];
